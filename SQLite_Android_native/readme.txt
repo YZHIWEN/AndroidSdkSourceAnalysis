@@ -1,0 +1,1 @@
+Ô´ÂëµØÖ·£ºhttps://android.googlesource.com/platform/frameworks/base.git/+/android-4.2.2_r1/core/jni
