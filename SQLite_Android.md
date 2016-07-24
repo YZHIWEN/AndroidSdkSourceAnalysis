@@ -1,7 +1,5 @@
-﻿
-新增android sqlite native 的代码
 
-转载请注明出处：http://blog.csdn.net/y_zhiwen/article/details/51583188
+新增android sqlite native 的代码
 
 我们在使用android提供的SQLite存储数据的时候，就会用到SQLiteOpenHelper和SQLiteDataBase，但查询数据的时候会得到一个Cursor对象，这里我们将深入android提供的关于SQLite的封装以原理。
 
@@ -161,8 +159,6 @@ public static SQLiteDatabase openDatabase(String path, CursorFactory factory, in
 open():
 
 ```java
-
-open():
 private void open() {
     try {
         try {
@@ -188,7 +184,7 @@ private void openInner() {
     }
 }
 
-可以看到调用SQLiteConnectionPool.open(mConfigurationLocked)：
+// 可以看到调用SQLiteConnectionPool.open(mConfigurationLocked)：
 public static SQLiteConnectionPool open(SQLiteDatabaseConfiguration configuration) {
     if (configuration == null) {
         throw new IllegalArgumentException("configuration must not be null.");
@@ -199,7 +195,7 @@ public static SQLiteConnectionPool open(SQLiteDatabaseConfiguration configuratio
     pool.open(); // might throw
     return pool;
 }
-可以看到其中是创建一个SQLiteConnectionPool，并且调用open操作：
+// 可以看到其中是创建一个SQLiteConnectionPool，并且调用open操作：
 
 // Might throw
 private void open() {
@@ -208,10 +204,10 @@ private void open() {
     mAvailablePrimaryConnection = openConnectionLocked(mConfiguration,
             true /*primaryConnection*/); // might throw
 
-   ...
+   // ...
 }
 
-可以看到创建了主连接mAvailablePrimaryConnection：
+// 可以看到创建了主连接mAvailablePrimaryConnection：
 private SQLiteConnection openConnectionLocked(SQLiteDatabaseConfiguration configuration,
         boolean primaryConnection) {
     final int connectionId = mNextConnectionId++;
@@ -219,7 +215,7 @@ private SQLiteConnection openConnectionLocked(SQLiteDatabaseConfiguration config
             connectionId, primaryConnection); // might throw
 }
 
-调用了SQLiteConnection.open()创建主连接：
+// 调用了SQLiteConnection.open()创建主连接：
 static SQLiteConnection open(SQLiteConnectionPool pool,
         SQLiteDatabaseConfiguration configuration,
         int connectionId, boolean primaryConnection) {
@@ -254,7 +250,7 @@ private void open() {
     }
 }
 
-可以看到最终调用了nativeOpen打开一个主数据库连接，并且设置各自sqlite的属性。
+// 可以看到最终调用了nativeOpen打开一个主数据库连接，并且设置各自sqlite的属性。
 ```
 
 **创建流程：**
