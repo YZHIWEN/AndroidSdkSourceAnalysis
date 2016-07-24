@@ -16,7 +16,7 @@
 两个方法：getReadableDatabase()、getWritableDatabase()。需要注意的一点是这两个方法都加锁，是线程安全的。这两个方法最终调用getDatabaseLocked(boolean writable)：
 
 
-```
+```java
 private SQLiteDatabase getDatabaseLocked(boolean writable) {
     if (mDatabase != null) {
         
@@ -147,7 +147,7 @@ WAL支持读写并发，是通过将修改的数据单独写到一个wal文件�
 
 获取SQLiteDatabase对象，从上面可以看到getReadableDatabase()、getWritableDatabase()是通过SQLiteDatabase.openDatabase(..)创建数据库，那么其中包含那些细节呢？
 
-```
+```java
 public static SQLiteDatabase openDatabase(String path, CursorFactory factory, int flags,
         DatabaseErrorHandler errorHandler) {
     SQLiteDatabase db = new SQLiteDatabase(path, flags, factory, errorHandler);
@@ -160,7 +160,7 @@ public static SQLiteDatabase openDatabase(String path, CursorFactory factory, in
 
 open():
 
-```
+```java
 
 open():
 private void open() {
@@ -277,7 +277,7 @@ private void open() {
 
 先分析一下insert()和insertOrThrow()插入函数：
 
-```
+```java
 // 最终会调用insertWithOnConflict
 public long insertWithOnConflict(String table, String nullColumnHack,
         ContentValues initialValues, int conflictAlgorithm) {
@@ -373,13 +373,13 @@ public long executeForLastInsertedRowId(String sql, Object[] bindArgs,
 这里有几个需要注意一下：
 
  - SQLiteSession：
-```
+```java
 private final ThreadLocal<SQLiteSession> mThreadSession = new ThreadLocal<SQLiteSession>() {
-        @Override
-        protected SQLiteSession initialValue() {
-            return createSession();
-        }
-    };
+    @Override
+    protected SQLiteSession initialValue() {
+        return createSession();
+    }
+};
 ```
 
 每个线程都拥有自己的SQLiteSession对象。多个线程进行数据操作的时候需要注意和处理保持数据的原子性
@@ -388,7 +388,7 @@ private final ThreadLocal<SQLiteSession> mThreadSession = new ThreadLocal<SQLite
 
 SQLiteStatement类代表一个sql语句，其父类为SQLiteProgram，从上面可以看到，insert操作会先构造出SQLiteStatement，其构造方法：
 
-```
+```java
 SQLiteProgram(SQLiteDatabase db, String sql, Object[] bindArgs,
         CancellationSignal cancellationSignalForPrepare) {
     mDatabase = db;
@@ -443,7 +443,7 @@ SQLiteProgram(SQLiteDatabase db, String sql, Object[] bindArgs,
 
 从源码可以看出查询操作最终会调用rawQueryWithFactory():
 
-```
+```java
 
 public Cursor rawQueryWithFactory(
         CursorFactory cursorFactory, String sql, String[] selectionArgs,
@@ -462,8 +462,7 @@ public Cursor rawQueryWithFactory(
 
 可以看出先构造出SQLiteDirectCursorDriver，再调用其query操作：
 
-```
-
+```java
 
 // SQLiteDirectCursorDriver::query():
 public Cursor query(CursorFactory factory, String[] selectionArgs) {
@@ -497,7 +496,7 @@ public Cursor query(CursorFactory factory, String[] selectionArgs) {
 
 SQLiteCursor分析：
 
-```
+```java
 public final boolean moveToFirst() {
     return moveToPosition(0);
 }
@@ -575,7 +574,7 @@ protected void clearOrCreateWindow(String name) {
 
 到这里你会发现CursorWindow，那这个对象是干嘛的呢？从文档上看可以发现其保存查询数据库的缓存，那么数据是缓存在哪的呢？先看器构造器：
 
-```
+```java
 public CursorWindow(String name) {
     // ...
     mWindowPtr = nativeCreate(mName, sCursorWindowSize);
@@ -587,8 +586,7 @@ public CursorWindow(String name) {
 
 nativeCreate通过JNI调用CursorWindow.cpp的create():
 
-```
-
+```java
 status_t CursorWindow::create(const String8& name, size_t size, CursorWindow** outCursorWindow) {
     String8 ashmemName("CursorWindow: ");
     ashmemName.append(name);
