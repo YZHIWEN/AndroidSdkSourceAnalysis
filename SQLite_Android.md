@@ -1,9 +1,5 @@
 
-新增android sqlite native 的代码
-
-我们在使用android提供的SQLite存储数据的时候，就会用到SQLiteOpenHelper和SQLiteDataBase，但查询数据的时候会得到一个Cursor对象，这里我们将深入android提供的关于SQLite的封装以原理。
-
-
+#SQLiteOpenHelper/SQLiteDatabase/Cursor源码解析
 
 ##SQLiteOpenHelper
 ——封装管理数据库的创造和版本管理类
